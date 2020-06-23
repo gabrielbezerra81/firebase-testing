@@ -7,10 +7,21 @@ import {
   TouchableOpacity,
 } from "react-native";
 import firebase from "firebase";
-import { useNavigation } from "@react-navigation/native";
+import { useNavigation, useRoute } from "@react-navigation/native";
+
+interface User {
+  user: {
+    email: string;
+    cpf: string;
+    tipo: number;
+  };
+}
 
 const Home = () => {
   const navigation = useNavigation();
+  const route = useRoute();
+
+  const { user } = route.params as User;
 
   function handleSignOut() {
     firebase
@@ -25,6 +36,9 @@ const Home = () => {
   return (
     <View style={styles.container}>
       <TouchableOpacity onPress={handleSignOut}>
+        <Text>Usuario logado: {user.email}</Text>
+        <Text>CPF: {user.cpf}</Text>
+        <Text>Tipo: {user.tipo}</Text>
         <Text>Deslogar</Text>
       </TouchableOpacity>
     </View>

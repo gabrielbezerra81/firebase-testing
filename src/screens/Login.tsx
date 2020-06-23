@@ -58,10 +58,11 @@ export default function Login() {
         .once("value")
         .then((snapshot) => {
           const { tipo, email, cpf } = snapshot.val();
+          const user = { tipo, email, cpf };
 
           // Fazer roteamento para a tela correta baseado no tipo do usuario
           // e passar algum parametro necessario
-          navigation.navigate("Home");
+          navigation.navigate("Home", { user });
           alert("usuario autenticado com sucesso");
         })
         .catch();
