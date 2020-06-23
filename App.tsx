@@ -10,20 +10,36 @@ import "./src/firebaseConfig";
 import firebase from "firebase";
 
 export default function App() {
-  const [email, setEmail] = useState("gabriel@gmail.com");
-  const [password, setPassword] = useState("123456");
+  const [email, setEmail] = useState("gabrielbezerra81@gmail.com");
+  const [password, setPassword] = useState("1234567");
+
+  // firebase auth tem a propriedade currentUser que mostra o usuario logado atualmente,
+  // então nao precisa passar o email como routeParam pra outras telas
+  // console.log(firebase.auth().currentUser);
+
+  function handleResetPassword() {
+    firebase
+      .auth()
+      .sendPasswordResetEmail(email)
+      .then(function () {
+        alert("foi enviado um email para resetar a sua senha");
+      })
+      .catch(function (error) {
+        // An error happened.
+      });
+  }
 
   function handleUserLogin() {
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
       .then((response) => {
-        console.log(response);
         const { user } = response;
-
+        // buscar dados do database utilizando o email
         console.log(user?.email);
       })
       .catch((error) => {
+        // mostrar algum alerta de erro
         console.log(error);
       });
   }
@@ -48,6 +64,10 @@ export default function App() {
 
         <TouchableOpacity onPress={handleUserLogin}>
           <Text>Logar</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity onPress={handleResetPassword}>
+          <Text>Resetar senha</Text>
         </TouchableOpacity>
       </View>
     </View>
@@ -75,6 +95,7 @@ const styles = StyleSheet.create({
   },
 });
 
+// Objeto retornado pelo login do firebase
 const loginReturn = {
   additionalUserInfo: {
     isNewUser: false,
