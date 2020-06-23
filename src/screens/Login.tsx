@@ -35,19 +35,37 @@ export default function Login() {
     firebase
       .auth()
       .signInWithEmailAndPassword(email, password)
-      .then((response) => {
-        const { user } = response;
+      .then(() => {
         // buscar dados do database utilizando o email
-        console.log(user?.email);
-        alert("usuario autenticado com sucesso");
 
-        navigation.navigate("Home");
+        handleUserTypeRouting();
       })
       .catch((error) => {
-        // mostrar algum alerta de erro
         alert("erro ao fazer login");
         console.log(error);
       });
+  }
+
+  function handleUserTypeRouting() {
+    const user = firebase.auth().currentUser;
+
+    if (user) {
+      const { email } = user;
+
+      firebase
+        .database()
+        .ref("/users/" + user.uid)
+        .once("value")
+        .then((snapshot) => {
+          const { tipo, email, cpf } = snapshot.val();
+
+          // Fazer roteamento para a tela correta baseado no tipo do usuario
+          // e passar algum parametro necessario
+          navigation.navigate("Home");
+          alert("usuario autenticado com sucesso");
+        })
+        .catch();
+    }
   }
 
   return (
